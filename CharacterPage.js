@@ -11,7 +11,6 @@ import {
   ScrollView,
   Button,
 } from "react-native";
-import Home from "./Home";
 import {
   NavigationContainer,
   NavigationEvents,
@@ -20,23 +19,22 @@ import {
   addListener,
 } from "@react-navigation/native";
 
-export default function AnimePage({ route }) {
+export default function CharacterPage({ route }) {
   const isFocused = useIsFocused();
 
   const navigationOptions = {
-    title: "AnimePage",
+    title: "CharacterPage",
   };
-  const [animeInfo, setAnimeInfo] = useState([]);
+  const [charInfo, setCharInfo] = useState([]);
   const [img, setImg] = useState();
-  const { id } = route.params;
-  const { setId } = route.params;
+  const { idChar } = route.params;
 
   useEffect(() => {
-    fetch(`https://api.jikan.moe/v4/anime/${id}`)
+    fetch(`https://api.jikan.moe/v4/characters/${idChar}`)
       .then((response) => response.json())
       .then((data) => {
-        setAnimeInfo(data.data);
-        setImg(data.data.images.webp.large_image_url);
+        setCharInfo(data.data);
+        setImg(data.data.images.webp.image_url);
       })
       .catch((err) => Alert.alert("something went wrong", err));
   }, [isFocused]);
@@ -53,10 +51,10 @@ export default function AnimePage({ route }) {
           }}
         >
           <Image style={styles.headerImg} resizeMode="cover" source={img} />
-          <Text style={styles.headerImgText}>{animeInfo.title}</Text>
+          <Text style={styles.headerImgText}>{charInfo.name}</Text>
         </View>
         <View>
-          <Text>Episodes: {animeInfo.episodes}</Text>
+          <Text>About: {charInfo.about}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
