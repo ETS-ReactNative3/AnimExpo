@@ -7,21 +7,31 @@ import {
   SafeAreaView,
   FlatList,
   Image,
+  ImageBackground,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import AnimePage from "./AnimePage";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  NavigationEvents,
+  apiCall,
+  useIsFocused,
+  addListener,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { ListItem } from "react-native-elements";
 
 export default function Home({ navigation }) {
   const Stack = createNativeStackNavigator();
+  const isFocused = useIsFocused();
 
   const [aniTop, setAniTop] = useState([]);
   const [aniCharacter, setAniCharacter] = useState([]);
   const [aniReview, setAniReview] = useState([]);
   const [id, setId] = useState("");
+  const [idChar, setIdChar] = useState("");
 
   const fetchData = () => {
     const aniTopAPI = "https://api.jikan.moe/v4/top/anime";
@@ -42,26 +52,28 @@ export default function Home({ navigation }) {
         setAniCharacter(allDataCharacter);
         setAniReview(allDataReview);
         setId(allDataTop.mal_id);
+        setId(allDataCharacter.mal_id);
       })
     );
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  const toAnimePage = () => {
-    navigation.navigate("AnimePage");
-  };
-
-  const onPressButton = () => {
-    alert("You tapped the button!");
-  };
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {/* TOP ANIME */}
+        <View>
+          <ImageBackground
+            style={styles.headerImg}
+            resizeMode="cover"
+            source={{ uri: "https://wallpapercave.com/wp/wp9000194.jpg" }}
+          >
+            <Text style={styles.headerImgText}>Welcome</Text>
+          </ImageBackground>
+        </View>
+        {/* TOP ANIME------------------------------------------------ */}
         <View style={{ paddingBottom: 30 }}>
           <Text style={styles.categories}>Top rated Anime</Text>
           <FlatList
@@ -72,8 +84,11 @@ export default function Home({ navigation }) {
               <View style={styles.flatlist}>
                 <TouchableOpacity
                   activeOpacity={0.5}
-                  onPress={toAnimePage}
-                  setId={item.mal_id}
+                  onPress={() => {
+                    navigation.navigate("AnimePage", {
+                      id: item.mal_id,
+                    });
+                  }}
                 >
                   <Text style={styles.caption}>Rank {item.rank}</Text>
                   <Image
@@ -88,7 +103,7 @@ export default function Home({ navigation }) {
           />
         </View>
 
-        {/* TOP CHARACTER */}
+        {/* TOP CHARACTER------------------------------------------- */}
         <View style={{ paddingBottom: 30 }}>
           <Text style={styles.categories}>Top Character</Text>
           <FlatList
@@ -97,8 +112,16 @@ export default function Home({ navigation }) {
             keyExtractor={(item) => item.mal_id}
             renderItem={({ item }) => (
               <View style={styles.flatlist}>
-                <TouchableOpacity activeOpacity={0.5} onPress={onPressButton}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() => {
+                    navigation.navigate("CharacterPage", {
+                      idChar: item.mal_id,
+                    });
+                  }}
+                >
                   <Text style={styles.caption}>{item.name}</Text>
+
                   <Image
                     style={styles.pictures}
                     source={{ uri: item.images.webp.image_url }}
@@ -110,7 +133,7 @@ export default function Home({ navigation }) {
           />
         </View>
 
-        {/* TOP REVIEW ANIME */}
+        {/* TOP REVIEW ANIME------------------------------------ */}
         <View style={{ paddingBottom: 40 }}>
           <Text style={styles.categories}>Top Reviewed Anime</Text>
           <FlatList
@@ -119,12 +142,21 @@ export default function Home({ navigation }) {
             keyExtractor={(item) => item.mal_id}
             renderItem={({ item }) => (
               <View style={styles.flatlist}>
-                <Text style={styles.caption}>Vote: {item.votes}</Text>
-                <Image
-                  style={styles.pictures}
-                  source={{ uri: item.entry.images.webp.large_image_url }}
-                />
-                <Text style={styles.caption}>{item.entry.title}</Text>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() => {
+                    navigation.navigate("AnimePage", {
+                      id: item.entry.mal_id,
+                    });
+                  }}
+                >
+                  <Text style={styles.caption}>Vote: {item.votes}</Text>
+                  <Image
+                    style={styles.pictures}
+                    source={{ uri: item.entry.images.webp.large_image_url }}
+                  />
+                  <Text style={styles.caption}>{item.entry.title}</Text>
+                </TouchableOpacity>
               </View>
             )}
           />
@@ -138,30 +170,45 @@ export default function Home({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
     flex: 1,
+  },
+  headerImg: {
+    paddingTop: 250,
+    marginTop: 20,
+    marginBottom: 20,
+    flex: 1,
+  },
+  headerImgText: {
+    fontSize: 20,
+    color: "#fff",
+    lineHeight: 40,
+    fontWeight: "bold",
+    textAlign: "center",
+    backgroundColor: "#b5b5cf",
   },
   flatlist: {
     marginTop: 5,
-    marginBottom: 5,
+    marginBottom: 0,
     marginLeft: 25,
     marginRight: 10,
     width: 230,
-    backgroundColor: "#BAABDA",
+    backgroundColor: "#e6e3e8",
+    borderRadius: 20,
   },
   categories: {
     fontWeight: "bold",
-    fontSize: 20,
-    color: "#BAABDA",
-    marginBottom: 10,
+    fontSize: 17,
+    color: "#black",
+    marginBottom: 2,
     marginLeft: 25,
-    marginTop: 20,
+    marginTop: 10,
   },
   caption: {
     fontSize: 15,
     fontWeight: "normal",
     color: "#000",
-    marginBottom: 5,
+    marginBottom: 10,
     marginTop: 5,
     textAlign: "center",
     justifyContent: "center",
@@ -170,5 +217,6 @@ const styles = StyleSheet.create({
     width: 230,
     height: 120,
     marginBottom: 10,
+    opacity: 20,
   },
 });
