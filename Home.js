@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   categories: {
     fontWeight: "bold",
     fontSize: 17,
-    color: "#black",
+    color: "#6a3d74",
     marginBottom: 2,
     marginLeft: 25,
     marginTop: 10,

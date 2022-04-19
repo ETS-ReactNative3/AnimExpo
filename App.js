@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#b5b5cf",
   },
   headerTintColor: {
-    headerTintColor: "fff",
+    headerTintColor: "6a3d74",
   },
   headerTitleStyle: {
     fontWeight: "bold",

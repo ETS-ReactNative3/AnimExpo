@@ -107,7 +107,13 @@ export default function Search({ navigation }) {
             />
           </View>
           {/* suggestions ------------------------------------------*/}
-          <View style={{ marginLeft: 25, marginRight: 25, marginBottom: 20 }}>
+          <View
+            style={{
+              marginLeft: 25,
+              marginRight: 25,
+              marginBottom: 20,
+            }}
+          >
             <Text style={styles.heading}>Suggestions</Text>
             <View style={styles.contentContainerStyle}>
               <Button
@@ -141,7 +147,14 @@ export default function Search({ navigation }) {
             </View>
           </View>
           {/* Gernes -----------------------------------------------*/}
-          <View style={{ marginLeft: 25, marginRight: 25, marginBottom: 20 }}>
+          <View
+            style={{
+              marginLeft: 25,
+              marginRight: 25,
+              marginBottom: 20,
+              padding: 10,
+            }}
+          >
             <Text style={styles.heading}>Genres</Text>
             <FlatList
               data={genres.slice(0, 19)}
@@ -179,6 +192,12 @@ export default function Search({ navigation }) {
             <Text style={styles.heading}>{text}</Text>
 
             <FlatList
+              contentContainerStyle={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
               style={styles.flatlist}
               numColumns={2}
               data={searchBar}
@@ -266,8 +285,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#e6e3e8",
     borderRadius: 10,
     // flexDirection: "row",
-    marginLeft: 2,
-    marginRight: 2,
+    marginLeft: 5,
+    marginRight: 5,
   },
   contentContainerStyle: {
     flexDirection: "row",
@@ -275,39 +294,39 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   result: {
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-    marginTop: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center",
+    marginLeft: 2,
+    marginRight: 2,
+    marginBottom: 2,
+    marginTop: 2,
+    // justifyContent: "center",
+    // alignItems: "center",
+    // alignContent: "center",
   },
   flatlist: {
-    marginTop: 5,
-    marginBottom: 5,
-    // marginLeft: 25,
-    // marginRight: 10
+    marginTop: 2,
+    marginBottom: 2,
     width: "90%",
+    marginLeft: 18,
+    marginRight: 10,
   },
   flatListView: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
     flexWrap: "wrap",
     backgroundColor: "#e6e3e8",
     borderRadius: 20,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 5,
+    marginRight: 5,
     flex: 1,
     flexDirection: "column",
-    // justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-    padding: 10,
+    padding: 5,
+    height: 270,
   },
   pictures: {
-    aspectRatio: 2 / 2,
-    height: 100,
+    width: 130,
+    height: 80,
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5,
