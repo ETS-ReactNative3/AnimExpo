@@ -53,8 +53,8 @@ export default function CharacterPage({ route }) {
           <Image style={styles.headerImg} resizeMode="cover" source={img} />
           <Text style={styles.headerImgText}>{charInfo.name}</Text>
         </View>
-        <View>
-          <Text>About: {charInfo.about}</Text>
+        <View style={styles.about}>
+          <Text>{charInfo.about}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -77,11 +77,20 @@ const styles = StyleSheet.create({
   },
   headerImgText: {
     fontSize: 20,
-    color: "#000",
+    color: "#6a3d74",
     lineHeight: 40,
     fontWeight: "bold",
     textAlign: "center",
     justifyContent: "center",
     backgroundColor: "#fff",
+    padding: 10,
+  },
+  about: {
+    padding: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    fontSize: 15,
+    marginBottom: 10,
+    marginTop: 10,
   },
 });
