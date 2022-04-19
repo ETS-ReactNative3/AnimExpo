@@ -55,8 +55,24 @@ export default function AnimePage({ route }) {
           <Image style={styles.headerImg} resizeMode="cover" source={img} />
           <Text style={styles.headerImgText}>{animeInfo.title}</Text>
         </View>
-        <View>
+
+        <View style={styles.facts}>
+          <Text>Title in Japanese: {animeInfo.title_japanese}</Text>
+          <Text>Type: {animeInfo.type}</Text>
+          <Text>Source: {animeInfo.source}</Text>
           <Text>Episodes: {animeInfo.episodes}</Text>
+          <Text>Status: {animeInfo.status}</Text>
+          <Text>Duration: {animeInfo.duration}</Text>
+          <Text>
+            Score: {animeInfo.score} by {animeInfo.score_by}
+          </Text>
+          <Text>Rank: {animeInfo.rank} </Text>
+          <Text>Rating: {animeInfo.rating} </Text>
+          <Text>Produce year: {animeInfo.year} </Text>
+        </View>
+
+        <View style={styles.synopsis}>
+          <Text>{animeInfo.synopsis}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -79,11 +95,29 @@ const styles = StyleSheet.create({
   },
   headerImgText: {
     fontSize: 20,
-    color: "#000",
+    color: "#6a3d74",
     lineHeight: 40,
     fontWeight: "bold",
     textAlign: "center",
     justifyContent: "center",
     backgroundColor: "#fff",
+    padding: 10,
+  },
+  synopsis: {
+    padding: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 20,
+    marginTop: 10,
+    backgroundColor: "#e6e3e8",
+    fontSize: 12,
+  },
+  facts: {
+    padding: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    fontSize: 15,
+    marginBottom: 10,
+    marginTop: 10,
   },
 });
