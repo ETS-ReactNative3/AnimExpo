@@ -7,21 +7,16 @@ import {
   SafeAreaView,
   FlatList,
   Image,
-  ImageBackground,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import axios from "axios";
-import AnimePage from "./AnimePage";
 import {
   NavigationContainer,
   NavigationEvents,
-  apiCall,
   useIsFocused,
-  addListener,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ListItem } from "react-native-elements";
 
 export default function Home({ navigation }) {
   const Stack = createNativeStackNavigator();
@@ -31,7 +26,6 @@ export default function Home({ navigation }) {
   const [aniCharacter, setAniCharacter] = useState([]);
   const [aniReview, setAniReview] = useState([]);
   const [id, setId] = useState("");
-  const [idChar, setIdChar] = useState("");
 
   const fetchData = () => {
     const aniTopAPI = "https://api.jikan.moe/v4/top/anime";
@@ -65,13 +59,11 @@ export default function Home({ navigation }) {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View>
-          <ImageBackground
+          <Image
             style={styles.headerImg}
-            resizeMode="cover"
+            // resizeMode="cover"
             source={{ uri: "https://wallpapercave.com/wp/wp9000194.jpg" }}
-          >
-            <Text style={styles.headerImgText}>Welcome</Text>
-          </ImageBackground>
+          ></Image>
         </View>
         {/* TOP ANIME------------------------------------------------ */}
         <View style={{ paddingBottom: 30 }}>
@@ -175,17 +167,9 @@ const styles = StyleSheet.create({
   },
   headerImg: {
     paddingTop: 250,
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: "2%",
+    marginBottom: "5%",
     flex: 1,
-  },
-  headerImgText: {
-    fontSize: 20,
-    color: "#fff",
-    lineHeight: 40,
-    fontWeight: "bold",
-    textAlign: "center",
-    backgroundColor: "#b5b5cf",
   },
   flatlist: {
     marginTop: 5,

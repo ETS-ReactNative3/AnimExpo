@@ -6,7 +6,6 @@ import {
   View,
   FlatList,
   Image,
-  ImageBackground,
   SafeAreaView,
   ScrollView,
   Button,
@@ -14,12 +13,10 @@ import {
 import {
   NavigationContainer,
   NavigationEvents,
-  apiCall,
   useIsFocused,
-  addListener,
 } from "@react-navigation/native";
 
-export default function CharacterPage({ route }) {
+export default function CharacterPage({ navigation, route }) {
   const isFocused = useIsFocused();
 
   const navigationOptions = {
@@ -50,7 +47,11 @@ export default function CharacterPage({ route }) {
             height: 500,
           }}
         >
-          <Image style={styles.headerImg} resizeMode="cover" source={img} />
+          <Image
+            style={styles.headerImg}
+            resizeMode="cover"
+            source={{ uri: img }}
+          />
           <Text style={styles.headerImgText}>{charInfo.name}</Text>
         </View>
         <View style={styles.about}>
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     // paddingTop: 50,
     // width: "100%",
     height: undefined,
-    aspectRatio: " auto 354 / 544",
+    aspectRatio: 1,
     resizeMode: "contain",
     marginTop: 20,
     marginBottom: 20,
