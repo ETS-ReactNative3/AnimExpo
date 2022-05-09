@@ -1,7 +1,5 @@
-import axios from "axios";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { hydrate } from "react-dom";
 import {
   StyleSheet,
   Text,
@@ -14,23 +12,19 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Button } from "react-native-elements";
-// import { DataTable } from "react-native-paper";
 import {
   NavigationContainer,
   NavigationEvents,
-  apiCall,
   useIsFocused,
-  addListener,
 } from "@react-navigation/native";
 
-export default function Search({ navigation }) {
+export default function Search({ navigation, route }) {
   const isFocused = useIsFocused();
 
   const [keyword, setKeyWord] = useState("");
   const [searchBar, setSearchBar] = useState([]);
   const [text, setText] = useState("");
   const [genres, setGenres] = useState([]);
-  const [idGenre, setIdGenre] = useState("");
   const [genresResult, setGenresResult] = useState([]);
   const [id, setId] = useState("");
 
@@ -41,27 +35,33 @@ export default function Search({ navigation }) {
         setSearchBar(data.data);
         setText("Results for [" + keyword + "]:");
         setId(data.data.mal_id);
+        setGenresResult([]);
+      })
+      .catch((err) => Alert.alert("something went wrong", err));
+  };
+
+  const fetchGenres = () => {
+    fetch("https://api.jikan.moe/v4/genres/anime")
+      .then((response) => response.json())
+      .then((data) => {
+        setGenres(data.data);
       })
       .catch((err) => Alert.alert("something went wrong", err));
   };
 
   useEffect(() => {
-    fetch(`https://api.jikan.moe/v4/genres/anime`)
-      .then((response) => response.json())
-      .then((data) => {
-        setGenres(data.data);
-        setIdGenre(data.data.mal_id);
-      })
-      .catch((err) => Alert.alert("something went wrong", err));
-  }, [isFocused]);
+    fetchGenres();
+  }, []);
 
   const getAniByGenres = (idGenre) => {
+    console.log(idGenre);
     fetch(`https://api.jikan.moe/v4/anime?genres=${idGenre}`)
       .then((response) => response.json())
       .then((data) => {
         setGenresResult(data.data);
-        // setText("Results for Genre [" +genres + "]:");
-        setId(data.data.mal_id);
+        setSearchBar([]);
+        setKeyWord("");
+        setText("");
       })
       .catch((err) => Alert.alert("something went wrong", err));
   };
@@ -70,187 +70,184 @@ export default function Search({ navigation }) {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View>
-          <View
-            style={{
-              marginLeft: 25,
-              marginRight: 25,
-              marginBottom: 20,
-              alignItems: "center",
-              alignContent: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            {/* search bar -----------------------------------------*/}
-            <TextInput
+          <View>
+            <View
               style={{
-                width: "60%",
-                borderColor: "#b5b5cf",
-                borderWidth: 2,
-                padding: 5,
+                marginLeft: 15,
+                marginRight: 15,
+                marginBottom: 20,
+                alignItems: "center",
+                alignContent: "center",
+                justifyContent: "center",
+                flexDirection: "row",
               }}
-              placeholder="search..."
-              onChangeText={(text) => setKeyWord(text)}
-            />
-            <Button
-              title="Search by Name"
-              onPress={() => getSearchBar(keyword)}
-              containerStyle={styles.containerStyleButton}
-              titleStyle={styles.titleStyleButton}
-              buttonStyle={{
-                backgroundColor: "#b5b5cf",
-                borderRadius: 10,
-                marginTop: 10,
-                marginLeft: 5,
-                marginRight: 5,
-              }}
-            />
-          </View>
-          {/* suggestions ------------------------------------------*/}
-          <View
-            style={{
-              marginLeft: 25,
-              marginRight: 25,
-              marginBottom: 20,
-            }}
-          >
-            <Text style={styles.heading}>Suggestions</Text>
-            <View style={styles.contentContainerStyle}>
+            >
               <Button
-                title="Doraemon"
-                onPress={() => getSearchBar("doraemon")}
+                title="Go back"
+                onPress={() => navigation.goBack()}
                 containerStyle={styles.containerStyleButton}
                 titleStyle={styles.titleStyleButton}
-                buttonStyle={styles.buttonStyleButton}
+                buttonStyle={{
+                  backgroundColor: "#b5b5cf",
+                  borderRadius: 10,
+                  marginTop: 10,
+                  marginLeft: 0,
+                  marginRight: 20,
+                }}
+              />
+              {/* search bar -----------------------------------------*/}
+              <TextInput
+                style={{
+                  width: "60%",
+                  borderColor: "#b5b5cf",
+                  borderWidth: 2,
+                  padding: 5,
+                }}
+                placeholder="search..."
+                onChangeText={(text) => setKeyWord(text)}
               />
               <Button
-                title="Conan"
-                onPress={() => getSearchBar("conan")}
+                title="Search by Name"
+                onPress={() => getSearchBar(keyword)}
                 containerStyle={styles.containerStyleButton}
                 titleStyle={styles.titleStyleButton}
-                buttonStyle={styles.buttonStyleButton}
-              />
-              <Button
-                title="Yaiba"
-                onPress={() => getSearchBar("yaiba")}
-                containerStyle={styles.containerStyleButton}
-                titleStyle={styles.titleStyleButton}
-                buttonStyle={styles.buttonStyleButton}
-              />
-              <Button
-                title="Gintama"
-                onPress={() => getSearchBar("gintama")}
-                containerStyle={styles.containerStyleButton}
-                titleStyle={styles.titleStyleButton}
-                buttonStyle={styles.buttonStyleButton}
+                buttonStyle={{
+                  backgroundColor: "#b5b5cf",
+                  borderRadius: 10,
+                  marginTop: 10,
+                  marginLeft: 5,
+                  marginRight: 0,
+                }}
               />
             </View>
-          </View>
-          {/* Gernes -----------------------------------------------*/}
-          <View
-            style={{
-              marginLeft: 25,
-              marginRight: 25,
-              marginBottom: 20,
-              padding: 10,
-            }}
-          >
-            <Text style={styles.heading}>Genres</Text>
-            <FlatList
-              data={genres.slice(0, 19)}
-              keyExtractor={(item) => item.mal_id}
-              contentContainerStyle={styles.contentContainerStyle}
-              renderItem={({ item }) => (
-                <View>
-                  {/* <TouchableOpacity
-                  // activeOpacity={0.5}
-                  // onPress={fetch(
-                  //   `https://api.jikan.moe/v3/search/anime?genre=${item.mal_id}`
-                  // )
-                  //   .then((response) => response.json())
-                  //   .then((data) => {
-                  //     setGenre(data.results), setText("Results for:");
-                  //   })
-                  //   .catch((err) => console.log("something went wrong", err))}
-                  > */}
-                  <Button
-                    title={item.name}
-                    containerStyle={styles.containerStyleButton}
-                    titleStyle={styles.titleStyleButton}
-                    buttonStyle={styles.buttonStyleButton}
-                    onPress={() => getAniByGenres(idGenre)}
-                  />
-
-                  {/* </TouchableOpacity> */}
-                </View>
-              )}
-            />
-          </View>
-          {/* search results ---------------------------------------*/}
-
-          <View style={styles.results}>
-            <Text style={styles.heading}>{text}</Text>
-
-            <FlatList
-              contentContainerStyle={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                alignItems: "center",
+            {/* suggestions ------------------------------------------*/}
+            <View
+              style={{
+                marginLeft: 25,
+                marginRight: 25,
+                marginBottom: 20,
               }}
-              style={styles.flatlist}
-              numColumns={2}
-              data={searchBar}
-              keyExtractor={(item) => item.mal_id}
-              renderItem={({ item }) => (
-                <View style={styles.flatListView}>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => {
-                      navigation.navigate("AnimePage", {
-                        id: item.mal_id,
-                      });
-                    }}
-                  >
-                    <Text style={styles.caption}>Rank: {item.rank}</Text>
-                    <Image
-                      style={styles.pictures}
-                      source={{ uri: item.images.webp.large_image_url }}
+            >
+              <Text style={styles.heading}>Suggestions</Text>
+              <View style={styles.contentContainerStyle}>
+                <Button
+                  title="Doraemon"
+                  onPress={() => getSearchBar("doraemon")}
+                  containerStyle={styles.containerStyleButton}
+                  titleStyle={styles.titleStyleButton}
+                  buttonStyle={styles.buttonStyleButton}
+                />
+                <Button
+                  title="Conan"
+                  onPress={() => getSearchBar("conan")}
+                  containerStyle={styles.containerStyleButton}
+                  titleStyle={styles.titleStyleButton}
+                  buttonStyle={styles.buttonStyleButton}
+                />
+                <Button
+                  title="Yaiba"
+                  onPress={() => getSearchBar("yaiba")}
+                  containerStyle={styles.containerStyleButton}
+                  titleStyle={styles.titleStyleButton}
+                  buttonStyle={styles.buttonStyleButton}
+                />
+                <Button
+                  title="Gintama"
+                  onPress={() => getSearchBar("gintama")}
+                  containerStyle={styles.containerStyleButton}
+                  titleStyle={styles.titleStyleButton}
+                  buttonStyle={styles.buttonStyleButton}
+                />
+              </View>
+            </View>
+            {/* Gernes -----------------------------------------------*/}
+            <View
+              style={{
+                marginLeft: 25,
+                marginRight: 25,
+                marginBottom: 20,
+                padding: 10,
+              }}
+            >
+              <Text style={styles.heading}>Genres</Text>
+              <FlatList
+                data={genres.slice(0, 19)}
+                keyExtractor={(item) => item.mal_id}
+                contentContainerStyle={styles.contentContainerStyle}
+                renderItem={({ item }) => (
+                  <View>
+                    <Button
+                      title={item.name}
+                      containerStyle={styles.containerStyleButton}
+                      titleStyle={styles.titleStyleButton}
+                      buttonStyle={styles.buttonStyleButton}
+                      onPress={() => getAniByGenres(item.mal_id)}
+                      // onPress={item.mal_id}
                     />
-                    <Text style={styles.caption}>{item.title}</Text>
-                    {/* <Text style={styles.caption}>Score: {item.score}</Text> */}
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
-            <FlatList
-              style={styles.flatlist}
-              numColumns={2}
-              data={genresResult}
-              keyExtractor={(item) => item.mal_id}
-              renderItem={({ item }) => (
-                <View style={styles.flatListView}>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => {
-                      navigation.navigate("AnimePage", {
-                        id: item.mal_id,
-                      });
-                    }}
-                  >
-                    <Text style={styles.caption}>Rank: {item.rank}</Text>
-                    <Image
-                      style={styles.pictures}
-                      source={{ uri: item.images.webp.large_image_url }}
-                    />
-                    <Text style={styles.caption}>{item.title}</Text>
-                    {/* <Text style={styles.caption}>Score: {item.score}</Text> */}
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
+                  </View>
+                )}
+              />
+            </View>
+            {/* search results ---------------------------------------*/}
+
+            <View style={styles.results}>
+              <Text style={styles.heading}>{text}</Text>
+
+              <FlatList
+                style={styles.flatlist}
+                numColumns={2}
+                data={searchBar}
+                keyExtractor={(item) => item.mal_id}
+                renderItem={({ item }) => (
+                  <View style={styles.flatListView}>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => {
+                        navigation.navigate("AnimePage", {
+                          id: item.mal_id,
+                        });
+                      }}
+                    >
+                      <Text style={styles.caption}>Rank: {item.rank}</Text>
+                      <Image
+                        style={styles.pictures}
+                        source={{ uri: item.images.webp.large_image_url }}
+                      />
+                      <Text style={styles.caption}>{item.title}</Text>
+                      {/* <Text style={styles.caption}>Score: {item.score}</Text> */}
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+              <FlatList
+                style={styles.flatlist}
+                numColumns={2}
+                data={genresResult}
+                keyExtractor={(item) => item.mal_id}
+                renderItem={({ item }) => (
+                  <View style={styles.flatListView}>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => {
+                        navigation.navigate("AnimePage", {
+                          id: item.mal_id,
+                        });
+                      }}
+                    >
+                      <Text style={styles.caption}>Rank: {item.rank}</Text>
+                      <Image
+                        style={styles.pictures}
+                        source={{ uri: item.images.webp.large_image_url }}
+                      />
+                      <Text style={styles.caption}>{item.title}</Text>
+                      {/* <Text style={styles.caption}>Score: {item.score}</Text> */}
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+            </View>
+            <StatusBar style="auto" />
           </View>
-          <StatusBar style="auto" />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -261,7 +258,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     flex: 1,
-    flexDirection: "center",
+    // flexDirection: "center",
   },
   pictures: {
     width: 100,
@@ -274,7 +271,7 @@ const styles = StyleSheet.create({
   },
   containerStyleButton: {
     height: 50,
-    marginHorizontalButton: 1,
+    // marginHorizontalButton: 1,
     alignItems: "center",
   },
   titleStyleButton: {
@@ -298,9 +295,6 @@ const styles = StyleSheet.create({
     marginRight: 2,
     marginBottom: 2,
     marginTop: 2,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // alignContent: "center",
   },
   flatlist: {
     marginTop: 2,

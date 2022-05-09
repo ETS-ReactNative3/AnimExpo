@@ -3,13 +3,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { Button, Text, Image, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "react-native-vector-icons";
-import { Header } from "react-native-elements";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Tab = createBottomTabNavigator();
 import Home from "./Home";
 import Search from "./Search";
 import AnimePage from "./AnimePage";
 import CharacterPage from "./CharacterPage";
+import MyPage from "./MyPage";
 
 export default function App() {
   return (
@@ -27,15 +28,18 @@ export default function App() {
           component={Home}
           options={{
             tabBarLabel: "HOME",
-            unmountOnBlur: true,
+            // unmountOnBlur: true,
+            // tabBarIcon: ({ color, size }) => (
+            //   <Ionicons name="home" color={color} size="large" />
+            // ),
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" color={color} size="large" />
+              <MaterialCommunityIcons name="home" color={color} size={size} />
             ),
             headerTitle: "AnimExpo",
             headerStyle: styles.headerStyle,
-            headerTintColor: styles.headerTintColor,
+            headerTintColor: "#6a3d74",
             headerTitleStyle: styles.headerTitleStyle,
-            headerTitleAlign: styles.headerTitleAlign,
+            headerTitleAlign: "center",
           }}
         />
 
@@ -43,23 +47,39 @@ export default function App() {
           name="Search"
           component={Search}
           options={{
-            headerTitle: "AnimExpo",
-            headerStyle: styles.headerStyle,
-            headerTintColor: styles.headerTintColor,
-            headerTitleStyle: styles.headerTitleStyle,
-            headerTitleAlign: styles.headerTitleAlign,
-            headerLeft: () => (
-              <Button
-                onPress={() => alert("This is a button!")}
-                // title="Info"
-                color="#fff"
-                icon="home"
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="magnify"
+                color={color}
+                size={size}
               />
             ),
+            headerTitle: "AnimExpo",
+            headerStyle: styles.headerStyle,
+            headerTintColor: "#6a3d74",
+            headerTitleStyle: styles.headerTitleStyle,
+            headerTitleAlign: "center",
             tabBarLabel: "SEARCH",
+          }}
+        />
+
+        <Tab.Screen
+          name="MyPage"
+          component={MyPage}
+          options={{
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="search-circle" color={color} size="large" />
+              <MaterialCommunityIcons
+                name="account"
+                color={color}
+                size={size}
+              />
             ),
+            headerTitle: "AnimExpo",
+            headerStyle: styles.headerStyle,
+            headerTintColor: "#6a3d74",
+            headerTitleStyle: styles.headerTitleStyle,
+            headerTitleAlign: "center",
+            tabBarLabel: "MY PAGE",
           }}
         />
 
@@ -71,10 +91,9 @@ export default function App() {
             tabBarVisible: false,
             headerTitle: "AnimExpo",
             headerStyle: styles.headerStyle,
-            headerTintColor: styles.headerTintColor,
+            headerTintColor: "#6a3d74",
             headerTitleStyle: styles.headerTitleStyle,
-            headerTitleAlign: styles.headerTitleAlign,
-            // headerLeft: () => <Button title="Go back" />,
+            headerTitleAlign: "center",
           }}
         />
 
@@ -86,10 +105,9 @@ export default function App() {
             tabBarVisible: false,
             headerTitle: "AnimExpo",
             headerStyle: styles.headerStyle,
-            headerTintColor: styles.headerTintColor,
+            headerTintColor: "#6a3d74",
             headerTitleStyle: styles.headerTitleStyle,
-            headerTitleAlign: styles.headerTitleAlign,
-            // headerLeft: () => <Button title="Go back" />,
+            headerTitleAlign: "center",
           }}
         />
       </Tab.Navigator>
@@ -101,15 +119,10 @@ const styles = StyleSheet.create({
   headerStyle: {
     backgroundColor: "#b5b5cf",
   },
-  headerTintColor: {
-    headerTintColor: "6a3d74",
-  },
+
   headerTitleStyle: {
     fontWeight: "bold",
     fontSize: 20,
-  },
-  headerTitleAlign: {
-    headerTitleAlign: "center",
   },
 });
 

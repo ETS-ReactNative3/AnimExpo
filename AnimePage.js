@@ -15,12 +15,11 @@ import Home from "./Home";
 import {
   NavigationContainer,
   NavigationEvents,
-  apiCall,
   useIsFocused,
-  addListener,
 } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function AnimePage({ route }) {
+export default function AnimePage({ route, navigation }) {
   const isFocused = useIsFocused();
 
   const navigationOptions = {
@@ -29,17 +28,44 @@ export default function AnimePage({ route }) {
   const [animeInfo, setAnimeInfo] = useState([]);
   const [img, setImg] = useState();
   const { id } = route.params;
-  const { setId } = route.params;
+
+  const [savedName, setSavedName] = useState("");
 
   useEffect(() => {
     fetch(`https://api.jikan.moe/v4/anime/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setAnimeInfo(data.data);
-        setImg(data.data.images.webp.large_image_url);
+        setImg(data.data.images.jpg.large_image_url);
+        setSavedName(data.data.title);
       })
       .catch((err) => Alert.alert("something went wrong", err));
   }, [isFocused]);
+
+  const saveAnime = async () => {
+    try {
+      await AsyncStorage.setItem(JSON.stringify(id), JSON.stringify(savedName));
+      getAllData();
+      navigation.navigate("MyPage", {
+        savedName: savedName,
+        id: id,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getAllData = () => {
+    AsyncStorage.getAllKeys().then((keys) => {
+      return AsyncStorage.multiGet(keys)
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,8 +78,9 @@ export default function AnimePage({ route }) {
             height: 500,
           }}
         >
-          <Image style={styles.headerImg} resizeMode="cover" source={img} />
+          <Image style={styles.headerImg} source={{ uri: img }} />
           <Text style={styles.headerImgText}>{animeInfo.title}</Text>
+          <Button title={"Save"} onPress={saveAnime} />
         </View>
 
         <View style={styles.facts}>
@@ -84,10 +111,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   headerImg: {
-    // paddingTop: 50,
-    // width: "100%",
     height: undefined,
-    aspectRatio: " auto 354 / 544",
+    aspectRatio: 1,
     resizeMode: "contain",
     marginTop: 20,
     marginBottom: 20,
