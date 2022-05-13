@@ -10,11 +10,7 @@ import {
   ScrollView,
   Button,
 } from "react-native";
-import {
-  NavigationContainer,
-  NavigationEvents,
-  useIsFocused,
-} from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function CharacterPage({ navigation, route }) {
   const isFocused = useIsFocused();
@@ -67,8 +63,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   headerImg: {
-    // paddingTop: 50,
-    // width: "100%",
     height: undefined,
     aspectRatio: 1,
     resizeMode: "contain",

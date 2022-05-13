@@ -11,21 +11,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import axios from "axios";
-import {
-  NavigationContainer,
-  NavigationEvents,
-  useIsFocused,
-} from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 export default function Home({ navigation }) {
-  const Stack = createNativeStackNavigator();
-  const isFocused = useIsFocused();
-
   const [aniTop, setAniTop] = useState([]);
   const [aniCharacter, setAniCharacter] = useState([]);
   const [aniReview, setAniReview] = useState([]);
-  const [id, setId] = useState("");
+  const [id, setId] = useState();
 
   const fetchData = () => {
     const aniTopAPI = "https://api.jikan.moe/v4/top/anime";
@@ -53,7 +44,11 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     fetchData();
-  }, [isFocused]);
+    // setId(0);
+    // setSavedName(
+    //   "Save Anime to this table by pressing on SAVE button on Anime Page"
+    // );
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +56,6 @@ export default function Home({ navigation }) {
         <View>
           <Image
             style={styles.headerImg}
-            // resizeMode="cover"
             source={{ uri: "https://wallpapercave.com/wp/wp9000194.jpg" }}
           ></Image>
         </View>

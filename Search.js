@@ -12,15 +12,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Button } from "react-native-elements";
-import {
-  NavigationContainer,
-  NavigationEvents,
-  useIsFocused,
-} from "@react-navigation/native";
 
 export default function Search({ navigation, route }) {
-  const isFocused = useIsFocused();
-
   const [keyword, setKeyWord] = useState("");
   const [searchBar, setSearchBar] = useState([]);
   const [text, setText] = useState("");
@@ -214,7 +207,6 @@ export default function Search({ navigation, route }) {
                         source={{ uri: item.images.webp.large_image_url }}
                       />
                       <Text style={styles.caption}>{item.title}</Text>
-                      {/* <Text style={styles.caption}>Score: {item.score}</Text> */}
                     </TouchableOpacity>
                   </View>
                 )}
@@ -240,7 +232,6 @@ export default function Search({ navigation, route }) {
                         source={{ uri: item.images.webp.large_image_url }}
                       />
                       <Text style={styles.caption}>{item.title}</Text>
-                      {/* <Text style={styles.caption}>Score: {item.score}</Text> */}
                     </TouchableOpacity>
                   </View>
                 )}
@@ -258,7 +249,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     flex: 1,
-    // flexDirection: "center",
   },
   pictures: {
     width: 100,
@@ -271,7 +261,6 @@ const styles = StyleSheet.create({
   },
   containerStyleButton: {
     height: 50,
-    // marginHorizontalButton: 1,
     alignItems: "center",
   },
   titleStyleButton: {
@@ -281,7 +270,6 @@ const styles = StyleSheet.create({
   buttonStyleButton: {
     backgroundColor: "#e6e3e8",
     borderRadius: 10,
-    // flexDirection: "row",
     marginLeft: 5,
     marginRight: 5,
   },
