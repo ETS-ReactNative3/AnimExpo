@@ -20,12 +20,10 @@ export default function MyPage({ route, navigation }) {
   };
 
   const { id } = route.params;
-  // const { savedListArr } = route.params;
   const { savedName } = route.params;
-  const [savedListArr, setSavedListArr] = useState([]);
+  const savedListArr = [savedName, ...savedListArr];
 
   useEffect(() => {
-    setSavedListArr([savedName, ...savedListArr]);
     getSavedAni();
     console.log("get" + savedName);
   }, []);
@@ -59,7 +57,7 @@ export default function MyPage({ route, navigation }) {
         <FlatList
           data={savedListArr}
           ItemSeparatorComponent={listSeparator}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => id}
           renderItem={({ item }) => (
             <View style={styles.flatlist}>
               <Text>{item}</Text>
