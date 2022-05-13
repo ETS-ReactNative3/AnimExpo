@@ -6,17 +6,11 @@ import {
   View,
   FlatList,
   Image,
-  ImageBackground,
   SafeAreaView,
   ScrollView,
-  Button,
 } from "react-native";
-import Home from "./Home";
-import {
-  NavigationContainer,
-  NavigationEvents,
-  useIsFocused,
-} from "@react-navigation/native";
+import { Button } from "react-native-elements";
+import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AnimePage({ route, navigation }) {
@@ -25,11 +19,13 @@ export default function AnimePage({ route, navigation }) {
   const navigationOptions = {
     title: "AnimePage",
   };
+
   const [animeInfo, setAnimeInfo] = useState([]);
   const [img, setImg] = useState();
   const { id } = route.params;
 
   const [savedName, setSavedName] = useState("");
+  const [savedListArr, setSavedListArr] = useState([]);
 
   useEffect(() => {
     fetch(`https://api.jikan.moe/v4/anime/${id}`)
@@ -43,27 +39,19 @@ export default function AnimePage({ route, navigation }) {
   }, [isFocused]);
 
   const saveAnime = async () => {
+    // setSavedListArr([savedName, ...savedListArr]);
     try {
       await AsyncStorage.setItem(JSON.stringify(id), JSON.stringify(savedName));
-      getAllData();
-      navigation.navigate("MyPage", {
-        savedName: savedName,
-        id: id,
-      });
     } catch (e) {
       console.error(e);
     }
-  };
 
-  const getAllData = () => {
-    AsyncStorage.getAllKeys().then((keys) => {
-      return AsyncStorage.multiGet(keys)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+    console.log("saved " + savedName);
+
+    navigation.navigate("MyPage", {
+      savedName: savedName,
+      id: id,
+      // savedListArr: savedListArr,
     });
   };
 
@@ -80,7 +68,20 @@ export default function AnimePage({ route, navigation }) {
         >
           <Image style={styles.headerImg} source={{ uri: img }} />
           <Text style={styles.headerImgText}>{animeInfo.title}</Text>
-          <Button title={"Save"} onPress={saveAnime} />
+          <Button
+            title={"Save"}
+            onPress={saveAnime}
+            buttonStyle={{
+              backgroundColor: "#b5b5cf",
+              borderRadius: 10,
+              marginTop: 10,
+              marginBottom: 10,
+              marginLeft: 0,
+              marginRight: 20,
+            }}
+          />
+          {/* <Button title={"get"} onPress={getSavedAni} />
+          <Text>a: {savedName}</Text> */}
         </View>
 
         <View style={styles.facts}>

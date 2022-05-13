@@ -2,7 +2,6 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Button, Text, Image, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "react-native-vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Tab = createBottomTabNavigator();
@@ -28,10 +27,6 @@ export default function App() {
           component={Home}
           options={{
             tabBarLabel: "HOME",
-            // unmountOnBlur: true,
-            // tabBarIcon: ({ color, size }) => (
-            //   <Ionicons name="home" color={color} size="large" />
-            // ),
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="home" color={color} size={size} />
             ),
