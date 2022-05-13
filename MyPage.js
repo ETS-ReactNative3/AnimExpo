@@ -20,9 +20,7 @@ export default function MyPage({ route, navigation }) {
   };
 
   const { id } = route.params;
-  // const { savedListArr } = route.params;
   const { savedName } = route.params;
-  // const [savedListArr, setSavedListArr] = useState([]);
   const savedListArr = [savedName, ...savedListArr];
 
   useEffect(() => {
@@ -36,7 +34,6 @@ export default function MyPage({ route, navigation }) {
     } catch (e) {
       console.error(e);
     }
-    // setSavedListArr([savedName, ...savedListArr]);
   };
 
   const listSeparator = () => {
